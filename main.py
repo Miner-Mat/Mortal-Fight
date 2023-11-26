@@ -7,6 +7,11 @@ pygame.display.set_caption("Mortal Fight")
 icon = pygame.image.load("logo.jpg")
 pygame.display.set_icon(icon)
 
+pygame.mixer.init()
+pygame.mixer.music.load("music.mp3")
+pygame.mixer.music.set_volume(0.5)
+pygame.mixer.music.play(-1)
+
 # Определяющие положение персонажа координаты
 x, y = -10, 110
 early_x = -120
