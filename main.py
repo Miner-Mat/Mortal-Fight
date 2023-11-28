@@ -100,17 +100,59 @@ while running:
         right = True
         left = False
 
+    if keys[pygame.K_LEFT]:
+        if x2 - speed2 < early_x2:
+            x2 = early_x2
+            if current_frame_run2 == 0:
+                current_frame_run2 = 7
+            current_frame_run2 -= 1
+        else:
+            x2 -= speed2
+            if current_frame_run2 == 0:
+                current_frame_run2 = 7
+            current_frame_run2 -= 1
+        standing2 = False
+        right2 = False
+        left2 = True
+
+    if keys[pygame.K_RIGHT]:
+        if x2 + speed2 > final_x2:
+            x2 = final_x2
+            if current_frame_run2 == 7:
+                current_frame_run2 = 0
+            current_frame_run2 += 1
+        else:
+            x2 += speed2
+            if current_frame_run2 == 7:
+                current_frame_run2 = 0
+            current_frame_run2 += 1
+        standing2 = False
+        right2 = True
+        left2 = False
+
     screen.blit(bg, (0, 0))
     if not keys[pygame.K_a] and not keys[pygame.K_d]:
         screen.blit(pygame.transform.scale(anim_st[current_frame], (170, 300)), (x, y))
     elif keys[pygame.K_a]:
         screen.blit(pygame.transform.flip(pygame.transform.scale(anim_run[current_frame], (290, 300)), True, False), (x, y))
     elif keys[pygame.K_d]:
-        screen.blit(pygame.transform.scale(anim_run[current_frame], (290, 300)),(x, y))
+        screen.blit(pygame.transform.scale(anim_run[current_frame], (290, 300)), (x, y))
+
+    if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
+        screen.blit(pygame.transform.flip(pygame.transform.scale(anim_st[current_frame2], (170, 300)), True, False), (x2, y2))
+    elif keys[pygame.K_LEFT]:
+        screen.blit(pygame.transform.flip(pygame.transform.scale(anim_run[current_frame2], (290, 300)), True, False),
+                    (x2, y2))
+    elif keys[pygame.K_RIGHT]:
+        screen.blit(pygame.transform.scale(anim_run[current_frame2], (290, 300)), (x2, y2))
+
     if current_frame == 6:
         current_frame = 0
     elif count % 6 == 0:
         current_frame += 1
+        current_frame2 += 1
+    if current_frame2 == 6:
+        current_frame2 = 0
     count += 1
     pygame.display.update()
 
