@@ -2,7 +2,7 @@ import pygame  # импортируем pygame
 
 # Инициализация Pygame
 pygame.init()
-screen = pygame.display.set_mode((1920, 1080))  # Задаём разрешение основного окна
+screen = pygame.display.set_mode((1920, 1080), pygame.FULLSCREEN)  # Задаём разрешение основного окна
 pygame.display.set_caption("Mortal Fight")  # Задаём название программе
 icon = pygame.image.load("logo.jpg")  # Загружаем логотип
 pygame.display.set_icon(icon)  # Выставляем логотип
@@ -32,6 +32,15 @@ anim_st = [pygame.image.load("Character_st/1st.png"), pygame.image.load("Charact
            pygame.image.load("Character_st/5st.png"), pygame.image.load("Character_st/6st.png"),
            pygame.image.load("Character_st/7st.png")]
 
+minus_anim_st = [pygame.image.load("-Character_st/1st.png"), pygame.image.load("-Character_st/2st.png"),
+           pygame.image.load("-Character_st/3st.png"), pygame.image.load("-Character_st/4st.png"),
+           pygame.image.load("-Character_st/5st.png"), pygame.image.load("-Character_st/6st.png"),
+           pygame.image.load("-Character_st/7st.png")]
+
+anim_fight = [pygame.image.load("Character_fight/Attack_1.png"), pygame.image.load("Character_fight/Attack_2.png"),
+              pygame.image.load("Character_fight/Attack_3.png"), pygame.image.load("Character_fight/Attack_4.png"),
+              pygame.image.load("Character_fight/Attack_5.png")]
+
 anim_run = [pygame.image.load("charact_run/run1.png"), pygame.image.load("charact_run/run2.png"),
             pygame.image.load("charact_run/run3.png"), pygame.image.load("charact_run/run4.png"),
             pygame.image.load("charact_run/run5.png"), pygame.image.load("charact_run/run6.png"),
@@ -39,6 +48,7 @@ anim_run = [pygame.image.load("charact_run/run1.png"), pygame.image.load("charac
 
 current_frame = 0  # текущий кадр
 current_frame_run = 0  # последний обновлённый кадр бега персонажа
+current_frame_fight = 0
 animation_delay = 100  # Задержка между кадрами
 last_update = pygame.time.get_ticks()  # последний обновлённый кадр
 
@@ -60,8 +70,8 @@ left = False
 right = True
 
 standing2 = True
-left2 = False
-right2 = True
+left2 = True
+right2 = False
 
 count = 6
 
@@ -112,8 +122,8 @@ while running:
                 current_frame_run2 = 7
             current_frame_run2 -= 1
         standing2 = False
-        right2 = False
         left2 = True
+        right2 = False
 
     if keys[pygame.K_RIGHT]:
         if x2 + speed2 > final_x2:
@@ -127,19 +137,28 @@ while running:
                 current_frame_run2 = 0
             current_frame_run2 += 1
         standing2 = False
-        right2 = True
         left2 = False
+        right2 = True
 
     screen.blit(bg, (0, 0))
-    if not keys[pygame.K_a] and not keys[pygame.K_d]:
-        screen.blit(pygame.transform.scale(anim_st[current_frame], (170, 300)), (x, y))
+    if not keys[pygame.K_a] and not keys[pygame.K_d] and not keys[pygame.K_f]:
+        if left:
+            screen.blit(pygame.transform.scale(minus_anim_st[current_frame], (170, 300)), (x, y))
+        if right:
+            screen.blit(pygame.transform.scale(anim_st[current_frame], (170, 300)), (x, y))
     elif keys[pygame.K_a]:
         screen.blit(pygame.transform.flip(pygame.transform.scale(anim_run[current_frame], (290, 300)), True, False), (x, y))
     elif keys[pygame.K_d]:
         screen.blit(pygame.transform.scale(anim_run[current_frame], (290, 300)), (x, y))
+    elif keys[pygame.K_f]:
+        screen.blit(pygame.transform.scale(anim_fight[current_frame_fight], (290, 300)), (x, y))
 
-    if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
-        screen.blit(pygame.transform.flip(pygame.transform.scale(anim_st[current_frame2], (170, 300)), True, False), (x2, y2))
+    if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT] and not keys[pygame.K_f]:
+        if right2:
+            screen.blit(pygame.transform.flip(pygame.transform.scale(minus_anim_st[current_frame2], (170, 300)), True, False),
+                        (x2, y2))
+        if left2:
+            screen.blit(pygame.transform.flip(pygame.transform.scale(anim_st[current_frame2], (170, 300)), True, False), (x2, y2))
     elif keys[pygame.K_LEFT]:
         screen.blit(pygame.transform.flip(pygame.transform.scale(anim_run[current_frame2], (290, 300)), True, False),
                     (x2, y2))
@@ -153,6 +172,10 @@ while running:
         current_frame2 += 1
     if current_frame2 == 6:
         current_frame2 = 0
+    if current_frame_fight == 4:
+        current_frame_fight = 0
+    elif count % 6 == 0:
+        current_frame_fight += 1
     count += 1
     pygame.display.update()
 
