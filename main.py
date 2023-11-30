@@ -1,4 +1,5 @@
 import pygame  # импортируем pygame
+from healthbars import Healthbars  # Импортируем класс Healthbars
 
 # Инициализация Pygame
 pygame.init()
@@ -59,10 +60,6 @@ last_update = pygame.time.get_ticks()  # последний обновлённы
 current_frame2 = 0
 current_frame_run2 = 0
 
-# Загружаем изображения первого и второго хэлфбара
-health_bar_1 = pygame.image.load("health_bar.png")
-health_bar_2 = pygame.image.load("health_bar.png")
-
 clock = pygame.time.Clock()
 
 # Значения хэлф баров
@@ -79,12 +76,7 @@ right2 = False
 
 count = 6
 
-
-def health_bar():  # Отрисовка хэлф баров
-    pygame.draw.rect(bg, (0, 255, 0), (38, 20, current_health_1 * 3, 40))
-    pygame.draw.rect(bg, (255, 255, 255), (38, 20, current_health_1 * 3, 40), width=2)
-    pygame.draw.rect(bg, (0, 255, 0), (1560, 20, current_health_2 * 3, 40))
-    pygame.draw.rect(bg, (255, 255, 255), (1560, 20, current_health_2 * 3, 40), width=2)
+health = Healthbars()  # Объявляем класс хэлфбаров
 
 
 def frame_check():  # Проверка кадров
@@ -205,8 +197,7 @@ def key_work():  # Обработка нажатий
 running = True  # флаг работы
 while running:
     clock.tick(60)  # обновление экрана 60 раз в секунду
-    health_bar()  # вызываем отрисовку хэлф баров
-
+    health.health_bar(bg, current_health_1, current_health_2)
     key_check()  # вызываем проверку нажатий
     screen.blit(bg, (0, 0))  # отрисовываем фон
 
