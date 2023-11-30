@@ -25,7 +25,7 @@ final_x2 = 1720
 speed2 = 5
 
 # Загружаем изображения
-bg = pygame.image.load("location.jpg")
+bg = pygame.image.load("location.jpg").convert_alpha()
 
 anim_st = [pygame.image.load("Character_st/1st.png"), pygame.image.load("Character_st/2st.png"),
            pygame.image.load("Character_st/3st.png"), pygame.image.load("Character_st/4st.png"),
@@ -33,9 +33,9 @@ anim_st = [pygame.image.load("Character_st/1st.png"), pygame.image.load("Charact
            pygame.image.load("Character_st/7st.png")]
 
 minus_anim_st = [pygame.image.load("-Character_st/1st.png"), pygame.image.load("-Character_st/2st.png"),
-           pygame.image.load("-Character_st/3st.png"), pygame.image.load("-Character_st/4st.png"),
-           pygame.image.load("-Character_st/5st.png"), pygame.image.load("-Character_st/6st.png"),
-           pygame.image.load("-Character_st/7st.png")]
+                 pygame.image.load("-Character_st/3st.png"), pygame.image.load("-Character_st/4st.png"),
+                 pygame.image.load("-Character_st/5st.png"), pygame.image.load("-Character_st/6st.png"),
+                 pygame.image.load("-Character_st/7st.png")]
 
 anim_fight = [pygame.image.load("Character_fight/Attack_1.png"), pygame.image.load("Character_fight/Attack_2.png"),
               pygame.image.load("Character_fight/Attack_3.png"), pygame.image.load("Character_fight/Attack_4.png"),
@@ -75,10 +75,17 @@ right2 = False
 
 count = 6
 
+
+def health_bar():  # Отрисовка хэлф баров
+    pygame.draw.rect(bg, (0, 255, 0), (38, 20, current_health_1 * 3, 40))
+    pygame.draw.rect(bg, (255, 255, 255), (38, 20, current_health_1 * 3, 40), width=2)
+    pygame.draw.rect(bg, (0, 255, 0), (1560, 20, current_health_2 * 3, 40))
+    pygame.draw.rect(bg, (255, 255, 255), (1560, 20, current_health_2 * 3, 40), width=2)
+
 running = True  # флаг работы
 while running:
     clock.tick(60)  # обновление экрана 60 раз в секунду
-
+    health_bar()  # вызываем отрисовку хэлф баров
     keys = pygame.key.get_pressed()
     if keys[pygame.K_a]:
         if x - speed < early_x:
@@ -141,13 +148,17 @@ while running:
         right2 = True
 
     screen.blit(bg, (0, 0))
+    if keys[pygame.K_f]:
+        current_health_2 -= 25
+
     if not keys[pygame.K_a] and not keys[pygame.K_d] and not keys[pygame.K_f]:
         if left:
             screen.blit(pygame.transform.scale(minus_anim_st[current_frame], (170, 300)), (x, y))
         if right:
             screen.blit(pygame.transform.scale(anim_st[current_frame], (170, 300)), (x, y))
     elif keys[pygame.K_a]:
-        screen.blit(pygame.transform.flip(pygame.transform.scale(anim_run[current_frame], (290, 300)), True, False), (x, y))
+        screen.blit(pygame.transform.flip(pygame.transform.scale(anim_run[current_frame], (290, 300)), True, False),
+                    (x, y))
     elif keys[pygame.K_d]:
         screen.blit(pygame.transform.scale(anim_run[current_frame], (290, 300)), (x, y))
     elif keys[pygame.K_f]:
@@ -155,10 +166,12 @@ while running:
 
     if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT] and not keys[pygame.K_f]:
         if right2:
-            screen.blit(pygame.transform.flip(pygame.transform.scale(minus_anim_st[current_frame2], (170, 300)), True, False),
-                        (x2, y2))
+            screen.blit(
+                pygame.transform.flip(pygame.transform.scale(minus_anim_st[current_frame2], (170, 300)), True, False),
+                (x2, y2))
         if left2:
-            screen.blit(pygame.transform.flip(pygame.transform.scale(anim_st[current_frame2], (170, 300)), True, False), (x2, y2))
+            screen.blit(pygame.transform.flip(pygame.transform.scale(anim_st[current_frame2], (170, 300)), True, False),
+                        (x2, y2))
     elif keys[pygame.K_LEFT]:
         screen.blit(pygame.transform.flip(pygame.transform.scale(anim_run[current_frame2], (290, 300)), True, False),
                     (x2, y2))
@@ -184,9 +197,3 @@ while running:
         if event.type == pygame.QUIT:
             running = False
             pygame.quit()
-
-    # Отрисовка хэлф баров
-    pygame.draw.rect(bg, (0, 255, 0), (38, 20, current_health_1 * 3, 40))
-    pygame.draw.rect(bg, (255, 255, 255), (38, 20, current_health_1 * 3, 40), width=2)
-    pygame.draw.rect(bg, (0, 255, 0), (1560, 20, current_health_1 * 3, 40))
-    pygame.draw.rect(bg, (255, 255, 255), (1560, 20, current_health_1 * 3, 40), width=2)
