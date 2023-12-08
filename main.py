@@ -26,7 +26,7 @@ final_x2 = 1720
 speed2 = 5
 
 # Загружаем изображения
-bg = pygame.image.load("location.jpg").convert_alpha()
+bg1 = pygame.image.load("location.jpg").convert_alpha()
 
 # Анимации персонажа в момент неподвижности вправо
 anim_st = [pygame.image.load("Character_st/1st.png"), pygame.image.load("Character_st/2st.png"),
@@ -66,6 +66,7 @@ clock = pygame.time.Clock()
 current_health_1 = 100
 current_health_2 = 100
 
+# Флаги состояния положения персонажа
 standing = True
 left = False
 right = True
@@ -74,7 +75,18 @@ standing2 = True
 left2 = True
 right2 = False
 
+# Счетчик анимаций
 count = 6
+
+# Текст - загаловок игры на входном экране
+game_entery_name = pygame.font.Font("Fonts/unispace bd.ttf", 100)
+text_surface = game_entery_name.render("MORTAL FIGHT", True, (255, 107, 107))
+
+# Кнопка начала игры
+play_button = pygame.Rect(830, 220, 300, 100)
+play_text_font = pygame.font.Font("Fonts/unispace bd.ttf", 70)
+play_text = play_text_font.render("PLAY", True, (255, 107, 107))
+play_text_rect = play_text.get_rect(center=play_button.center)
 
 health = Healthbars()  # Объявляем класс хэлфбаров
 
@@ -194,19 +206,30 @@ def key_work():  # Обработка нажатий
         screen.blit(pygame.transform.scale(anim_run[current_frame2], (290, 300)), (x2, y2))
 
 
+flag = False
 running = True  # флаг работы
 while running:
     clock.tick(60)  # обновление экрана 60 раз в секунду
-    health.health_bar(bg, current_health_1, current_health_2)
-    key_check()  # вызываем проверку нажатий
-    screen.blit(bg, (0, 0))  # отрисовываем фон
+    if not flag:
+        screen.fill((192, 6, 13))
+        screen.blit(text_surface, (600, 50))
+        pygame.draw.rect(screen, (170, 0, 0), play_button)
+        screen.blit(play_text, play_text_rect)
 
-    key_work()  # вызываем обработку нажатий
-    frame_check()  # вызываем проверку кадров
+    if flag:
+        health.health_bar(bg1, current_health_1, current_health_2)
+        key_check()  # вызываем проверку нажатий
+        screen.blit(bg1, (0, 0))  # отрисовываем фон
+
+        key_work()  # вызываем обработку нажатий
+        frame_check()  # вызываем проверку кадров
     pygame.display.update()  # обновляем окно
 
     # Скрипт выхода из игры
     for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if play_button.collidepoint(event.pos):
+                flag = True
         if event.type == pygame.QUIT:
             running = False
             pygame.quit()
