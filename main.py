@@ -88,6 +88,12 @@ play_text_font = pygame.font.Font("Fonts/unispace bd.ttf", 70)
 play_text = play_text_font.render("PLAY", True, (255, 107, 107))
 play_text_rect = play_text.get_rect(center=play_button.center)
 
+# Кнопка выхода из игры
+exit_button = pygame.Rect(830, 350, 300, 100)
+exit_text_font = pygame.font.Font("Fonts/unispace bd.ttf", 70)
+exit_text = exit_text_font.render("EXIT", True, (255, 107, 107))
+exit_text_rect = exit_text.get_rect(center=exit_button.center)
+
 health = Healthbars()  # Объявляем класс хэлфбаров
 
 
@@ -215,6 +221,8 @@ while running:
         screen.blit(text_surface, (600, 50))
         pygame.draw.rect(screen, (170, 0, 0), play_button)
         screen.blit(play_text, play_text_rect)
+        pygame.draw.rect(screen, (170, 0, 0), exit_button)
+        screen.blit(exit_text, exit_text_rect)
 
     if flag:
         health.health_bar(bg1, current_health_1, current_health_2)
@@ -230,6 +238,9 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if play_button.collidepoint(event.pos):
                 flag = True
+            elif exit_button.collidepoint(event.pos):
+                running = False
+
         if event.type == pygame.QUIT:
             running = False
             pygame.quit()
