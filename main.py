@@ -51,6 +51,11 @@ anim_run = [pygame.image.load("charact_run/run1.png"), pygame.image.load("charac
             pygame.image.load("charact_run/run5.png"), pygame.image.load("charact_run/run6.png"),
             pygame.image.load("charact_run/run7.png"), pygame.image.load("charact_run/run8.png")]
 
+# Арены для сражения
+arens = [pygame.image.load("arenas/location.jpg"), pygame.image.load("arenas/location2.jpg"),
+         pygame.image.load("arenas/location1.jpg"), pygame.image.load("arenas/location3.jpg"),
+         pygame.image.load("arenas/location4.jpg")]
+
 current_frame = 0  # текущий кадр
 current_frame_run = 0  # последний обновлённый кадр бега персонажа
 current_frame_fight = 0
@@ -78,6 +83,9 @@ right2 = False
 # Счетчик анимаций
 count = 6
 
+# Счетчик выбора арен
+arenas_count = 2
+
 # Текст - загаловок игры на входном экране
 game_entery_name = pygame.font.Font("Fonts/unispace bd.ttf", 100)
 text_surface = game_entery_name.render("MORTAL FIGHT", True, (255, 107, 107))
@@ -93,6 +101,24 @@ exit_button = pygame.Rect(830, 350, 300, 100)
 exit_text_font = pygame.font.Font("Fonts/unispace bd.ttf", 70)
 exit_text = exit_text_font.render("EXIT", True, (255, 107, 107))
 exit_text_rect = exit_text.get_rect(center=exit_button.center)
+
+# Кнопка возврата в меню игры
+back_button = pygame.Rect(1230, 20, 50, 50)
+back_image = pygame.transform.scale(pygame.image.load("krest.png").convert_alpha(), (40, 40))
+back_image_rect = back_image.get_rect(center=back_button.center)
+
+# Заголовок окна выбора арены
+arena_text_font = pygame.font.Font("Fonts/unispace bd.ttf", 70)
+arena_text = arena_text_font.render("ARENA", True, (255, 107, 107))
+
+# Окно выбора арены
+aren_window = pygame.Rect(230, 600, 600, 400)
+arena = pygame.transform.scale(arens[arenas_count], (600, 400))
+arena_rect = arena.get_rect(center=aren_window.center)
+
+# Стрелки выбора арены
+left_strelka = pygame.image.load("left_strelka.png")
+right_strelka = pygame.image.load("right_strelka.png")
 
 health = Healthbars()  # Объявляем класс хэлфбаров
 
@@ -223,11 +249,16 @@ while running:
         screen.blit(play_text, play_text_rect)
         pygame.draw.rect(screen, (170, 0, 0), exit_button)
         screen.blit(exit_text, exit_text_rect)
+        pygame.draw.rect(screen, (170, 0, 0), aren_window)
+        screen.blit(arena, arena_rect)
+        screen.blit(arena_text, (420, 500))
 
     if flag:
-        health.health_bar(bg1, current_health_1, current_health_2)
+        health.health_bar(arens[arenas_count], current_health_1, current_health_2)
         key_check()  # вызываем проверку нажатий
-        screen.blit(bg1, (0, 0))  # отрисовываем фон
+        screen.blit(arens[arenas_count], (0, 0))  # отрисовываем фон
+        pygame.draw.rect(screen, (170, 0, 0), back_button)
+        screen.blit(back_image, back_image_rect)
 
         key_work()  # вызываем обработку нажатий
         frame_check()  # вызываем проверку кадров
@@ -238,6 +269,35 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if play_button.collidepoint(event.pos):
                 flag = True
+            elif back_button.collidepoint(event.pos):
+                flag = False
+
+                # Сбрасываем значения всех переменных до по умолчанию
+                x, y = 160, 710
+                early_x = -120
+                final_x = 1720
+                speed = 5
+                x2, y2 = 1580, 710
+                early_x2 = -120
+                final_x2 = 1720
+                speed2 = 5
+                current_frame = 0
+                current_frame_run = 0
+                current_frame_fight = 0
+                animation_delay = 100
+                last_update = pygame.time.get_ticks()
+                current_frame2 = 0
+                current_frame_run2 = 0
+                current_health_1 = 100
+                current_health_2 = 100
+                standing = True
+                left = False
+                right = True
+                standing2 = True
+                left2 = True
+                right2 = False
+                count = 6
+
             elif exit_button.collidepoint(event.pos):
                 running = False
 
