@@ -149,12 +149,12 @@ def key_check():  # Проверка нажатий
             x = early_x
             if current_frame_run == 0:
                 current_frame_run = 7
-            current_frame_run -= 1
+            current_frame_run += 1
         else:
             x -= speed
             if current_frame_run == 0:
                 current_frame_run = 7
-            current_frame_run -= 1
+            current_frame_run += 1
         standing = False
         right = False
         left = True
@@ -205,11 +205,14 @@ def key_check():  # Проверка нажатий
         right2 = True
 
 
-def key_work():  # Обработка нажатий
+def key_work():
     global current_health_2
     keys = pygame.key.get_pressed()
+
     if keys[pygame.K_f]:
-        current_health_2 -= 25
+        if not flag:
+            if x < x2 + 170 and x + 170 > x2 and y < y2 + 300 and y + 300 > y2:
+                current_health_2 -= 5
 
     if not keys[pygame.K_a] and not keys[pygame.K_d] and not keys[pygame.K_f]:
         if left:
@@ -243,6 +246,7 @@ flag = False
 running = True  # флаг работы
 while running:
     clock.tick(60)  # обновление экрана 60 раз в секунду
+    health.health_to_all(arens, current_health_1, current_health_2)
     arena = pygame.transform.scale(arens[arenas_count], (600, 400))
     if not flag:
         screen.fill((192, 6, 13))
@@ -258,7 +262,7 @@ while running:
         screen.blit(right_strelka, (850, 750))
 
     if flag:
-        health.health_bar(arens, arenas_count, screen, current_health_1, current_health_2)
+        health.health_bar(arens, arenas_count, current_health_1, current_health_2)
         key_check()  # вызываем проверку нажатий
         screen.blit(arens[arenas_count], (0, 0))  # отрисовываем фон
         pygame.draw.rect(screen, (170, 0, 0), back_button)
