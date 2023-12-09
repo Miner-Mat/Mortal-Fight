@@ -117,9 +117,10 @@ arena = pygame.transform.scale(arens[arenas_count], (600, 400))
 arena_rect = arena.get_rect(center=aren_window.center)
 
 # Стрелки выбора арены
-left_strelka = pygame.image.load("left_strelka.png")
-right_strelka = pygame.image.load("right_strelka.png")
-
+left_strelka = pygame.transform.scale(pygame.image.load("left_strelka.png"), (100, 100))
+left_strelka_rect = left_strelka.get_rect(topleft=(100, 750))
+right_strelka = pygame.transform.scale(pygame.image.load("right_strelka.png"), (100, 100))
+right_strelka_rect = right_strelka.get_rect(topleft=(850, 750))
 health = Healthbars()  # Объявляем класс хэлфбаров
 
 
@@ -242,6 +243,7 @@ flag = False
 running = True  # флаг работы
 while running:
     clock.tick(60)  # обновление экрана 60 раз в секунду
+    arena = pygame.transform.scale(arens[arenas_count], (600, 400))
     if not flag:
         screen.fill((192, 6, 13))
         screen.blit(text_surface, (600, 50))
@@ -252,9 +254,11 @@ while running:
         pygame.draw.rect(screen, (170, 0, 0), aren_window)
         screen.blit(arena, arena_rect)
         screen.blit(arena_text, (420, 500))
+        screen.blit(left_strelka, (100, 750))
+        screen.blit(right_strelka, (850, 750))
 
     if flag:
-        health.health_bar(arens[arenas_count], current_health_1, current_health_2)
+        health.health_bar(arens, arenas_count, screen, current_health_1, current_health_2)
         key_check()  # вызываем проверку нажатий
         screen.blit(arens[arenas_count], (0, 0))  # отрисовываем фон
         pygame.draw.rect(screen, (170, 0, 0), back_button)
@@ -269,9 +273,16 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if play_button.collidepoint(event.pos):
                 flag = True
+            elif left_strelka_rect.collidepoint(event.pos):
+                arenas_count -= 1
+                if arenas_count < 0:
+                    arenas_count = len(arens) - 1
+            elif right_strelka_rect.collidepoint(event.pos):
+                arenas_count += 1
+                if arenas_count >= len(arens):
+                    arenas_count = 0
             elif back_button.collidepoint(event.pos):
                 flag = False
-
                 # Сбрасываем значения всех переменных до по умолчанию
                 x, y = 160, 710
                 early_x = -120
