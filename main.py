@@ -3,7 +3,12 @@ from healthbars import Healthbars  # Импортируем класс Healthbar
 
 # Инициализация Pygame
 pygame.init()
-screen = pygame.display.set_mode((1920, 1080), pygame.FULLSCREEN)  # Задаём разрешение основного окна
+
+user_screen_info = pygame.display.Info()
+user_screen_width = user_screen_info.current_w
+user_screen_height = user_screen_info.current_h
+
+screen = pygame.display.set_mode((user_screen_width, user_screen_height))  # Задаём разрешение основного окна
 pygame.display.set_caption("Mortal Fight")  # Задаём название программе
 icon = pygame.image.load("logo.jpg")  # Загружаем логотип
 pygame.display.set_icon(icon)  # Выставляем логотип
@@ -26,7 +31,7 @@ final_x2 = 1720
 speed2 = 5
 
 # Загружаем изображения
-bg1 = pygame.image.load("location.jpg").convert_alpha()
+bg1 = pygame.transform.scale(pygame.image.load("location.jpg").convert_alpha(), (user_screen_width, user_screen_height))
 
 # Анимации персонажа в момент неподвижности вправо
 anim_st = [pygame.image.load("Character_st/1st.png"), pygame.image.load("Character_st/2st.png"),
@@ -52,9 +57,11 @@ anim_run = [pygame.image.load("charact_run/run1.png"), pygame.image.load("charac
             pygame.image.load("charact_run/run7.png"), pygame.image.load("charact_run/run8.png")]
 
 # Арены для сражения
-arens = [pygame.image.load("arenas/location.jpg"), pygame.image.load("arenas/location2.jpg"),
-         pygame.image.load("arenas/location1.jpg"), pygame.image.load("arenas/location3.jpg"),
-         pygame.image.load("arenas/location4.jpg")]
+arens = [pygame.transform.scale(pygame.image.load("arenas/location.jpg"), (user_screen_width, user_screen_height)),
+         pygame.transform.scale(pygame.image.load("arenas/location2.jpg"), (user_screen_width, user_screen_height)),
+         pygame.transform.scale(pygame.image.load("arenas/location1.jpg"), (user_screen_width, user_screen_height)),
+         pygame.transform.scale(pygame.image.load("arenas/location3.jpg"), (user_screen_width, user_screen_height)),
+         pygame.transform.scale(pygame.image.load("arenas/location4.jpg"), (user_screen_width, user_screen_height))]
 
 current_frame = 0  # текущий кадр
 current_frame_run = 0  # последний обновлённый кадр бега персонажа
