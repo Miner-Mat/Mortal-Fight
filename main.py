@@ -15,7 +15,7 @@ pygame.display.set_icon(icon)  # Выставляем логотип
 
 pygame.mixer.init()  # инициализируем функцию добавления музыки
 pygame.mixer.music.load("music.mp3")  # Загружаем музыку
-pygame.mixer.music.set_volume(0.5)  # Выставляем громкость
+pygame.mixer.music.set_volume(0.2)  # Выставляем громкость
 pygame.mixer.music.play(-1)  # Запускаем бесконечный цикл проигрывания
 
 # Определяющие положение персонажа переменные
@@ -63,11 +63,11 @@ arens = [pygame.transform.scale(pygame.image.load("arenas/location.jpg"), (user_
          pygame.transform.scale(pygame.image.load("arenas/location3.jpg"), (user_screen_width, user_screen_height)),
          pygame.transform.scale(pygame.image.load("arenas/location4.jpg"), (user_screen_width, user_screen_height))]
 
-current_frame = 0  # текущий кадр
+current_frame = 0  # текущий кадр стояния
 current_frame_run = 0  # последний обновлённый кадр бега персонажа
 current_frame_fight = 0
 animation_delay = 100  # Задержка между кадрами
-last_update = pygame.time.get_ticks()  # последний обновлённый кадр
+
 
 current_frame2 = 0
 current_frame_run2 = 0
@@ -149,19 +149,17 @@ def frame_check():  # Проверка кадров
 
 def key_check():  # Проверка нажатий
     global x, current_frame_run, early_x, early_x2, standing, right, left, speed, final_x
-    global standing2, right2, left2, x2, current_frame_run2, speed2, final_x2, early_x2
+    global standing2, right2, left2, x2, current_frame_run2, speed2, final_x2
     keys = pygame.key.get_pressed()
     if keys[pygame.K_a]:
         if x - speed < early_x:
             x = early_x
-            if current_frame_run == 0:
-                current_frame_run = 7
             current_frame_run += 1
         else:
             x -= speed
-            if current_frame_run == 0:
-                current_frame_run = 7
             current_frame_run += 1
+        if current_frame_run == 7:
+            current_frame_run = 0
         standing = False
         right = False
         left = True
@@ -234,7 +232,7 @@ def key_work():
     elif keys[pygame.K_f]:
         screen.blit(pygame.transform.scale(anim_fight[current_frame_fight], (290, 300)), (x, y))
 
-    if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT] and not keys[pygame.K_f]:
+    if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
         if right2:
             screen.blit(
                 pygame.transform.flip(pygame.transform.scale(minus_anim_st[current_frame2], (170, 300)), True, False),
